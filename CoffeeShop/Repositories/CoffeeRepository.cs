@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeShop.Repositories
 {
-    public class CoffeeRepository
+    public class CoffeeRepository : ICoffeeRepository
     {
         private readonly string _connectionString;
         public CoffeeRepository(IConfiguration configuration)
@@ -41,12 +41,12 @@ namespace CoffeeShop.Repositories
                     {
                         var coffee = new Coffee()
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Id = reader.GetInt32(reader.GetOrdinal("CoffeeId")),
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             BeanVarietyId = reader.GetInt32(reader.GetOrdinal("CoffeeBVid")),
                             Bean = new BeanVariety()
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Id = reader.GetInt32(reader.GetOrdinal("BeanVarietyId")),
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 Region = reader.GetString(reader.GetOrdinal("Region"))
                             }
@@ -86,12 +86,12 @@ namespace CoffeeShop.Repositories
                     {
                         coffee = new Coffee()
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Id = reader.GetInt32(reader.GetOrdinal("CoffeeId")),
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             BeanVarietyId = reader.GetInt32(reader.GetOrdinal("CoffeeBVid")),
                             Bean = new BeanVariety()
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Id = reader.GetInt32(reader.GetOrdinal("BeanVarietyId")),
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 Region = reader.GetString(reader.GetOrdinal("Region"))
                             }
@@ -113,7 +113,8 @@ namespace CoffeeShop.Repositories
             using (var conn = Connection)
             {
                 conn.Open();
-                using (var cmd = conn.CreateCommand(){
+                using (var cmd = conn.CreateCommand())
+                {
                     cmd.CommandText = @"INSERT INTO Coffee (Title, BeanVarietyId)
                                         OUTPUT INSERTED.ID
                                         VALUES (@title, @beanVarietyId)";
